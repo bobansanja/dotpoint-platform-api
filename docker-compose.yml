@@ -1,0 +1,25 @@
+version: "3"
+services:
+  mariadb:
+    image: mariadb:11
+    restart: "unless-stopped"
+    container_name: dotpoint_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: dotpoint_demo
+      MYSQL_USER: dotpoint_app
+      MYSQL_PASSWORD: dotpoint_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker_data/mysql:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: "unless-stopped"
+    container_name: dotpoint_pma
+    environment:
+      PMA_HOST: mariadb
+    ports:
+      - "10000:80"
+    depends_on:
+      - mariadb

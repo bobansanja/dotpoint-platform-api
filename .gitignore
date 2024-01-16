@@ -1,0 +1,7 @@
+.vscode
+.idea
+.DS_Store
+docker_data
+node_modules
+upload/*
+!upload/.gitkeep
