@@ -16,6 +16,23 @@ router.use(authenticateUser);
  * @swagger
  * /products:
  *   get:
+ *     summary: Get all active products
+ *     tags: [Products]
+ *     description: Retrieve a list of all active products.
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of products
+ *         content:
+ *           application/json:
+ *             example:
+ *               {"free_products":[{"id":1,"title":"Free Product 1","unique_name":"free_product_1","position":1,"subscription_required":0,"active":1,"modules":[{"id":1,"title":"Title","description":"Description text","unique_name":"unique_module","position":1,"active":1,"product_id":1}]}],"subscription_products":[{"id":2,"title":"Paid Product 1","unique_name":"paid_product_1","position":2,"subscription_required":1,"active":1,"modules":[{"id":2,"title":"Title Paid","description":"Description text","unique_name":"unique_module","position":1,"active":1,"product_id":1}]}]}
+ */
+router.get("/", productController.getAllActiveProducts);
+
+/**
+ * @swagger
+ * /products/all:
+ *   get:
  *     summary: Get all products
  *     tags: [Products]
  *     description: Retrieve a list of all products.
@@ -27,7 +44,7 @@ router.use(authenticateUser);
  *             example:
  *               {"free_products":[{"id":1,"title":"Free Product 1","unique_name":"free_product_1","position":1,"subscription_required":0,"active":1,"modules":[{"id":1,"title":"Title","description":"Description text","unique_name":"unique_module","position":1,"active":1,"product_id":1}]}],"subscription_products":[{"id":2,"title":"Paid Product 1","unique_name":"paid_product_1","position":2,"subscription_required":1,"active":1,"modules":[{"id":2,"title":"Title Paid","description":"Description text","unique_name":"unique_module","position":1,"active":1,"product_id":1}]}]}
  */
-router.get("/", productController.getAllProducts);
+router.get("/all", isAdmin, productController.getAllProducts);
 
 /**
  * @swagger

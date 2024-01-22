@@ -29,9 +29,24 @@ const getUserProducts = async (userId) => {
     return userProducts;
 };
 
+const editUserProfile = async (userId, newData) => {
+    await db("users").where({ id: userId }).update(newData);
+};
+
+const getUserById = async (userId) => {
+    return db("users").where({ id: userId }).first();
+};
+
+const changeUserPassword = async (userId, newPassword) => {
+    await db("users").where({ id: userId }).update({ password: newPassword });
+};
+
 module.exports = {
     createUser,
     getUserByEmail,
     getAllUsers,
     getUserProducts,
+    editUserProfile,
+    getUserById,
+    changeUserPassword,
 };

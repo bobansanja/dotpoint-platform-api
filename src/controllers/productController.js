@@ -1,8 +1,7 @@
 const productModel = require("../models/productModel");
 const moduleModel = require("../models/moduleModel");
-const subscriptionModel = require("../models/subscriptionModel");
 
-const getAllProducts = async (req, res) => {
+const getAllActiveProducts = async (req, res) => {
     try {
         const products = await productModel.getAllProducts();
         const productsWithModules = await Promise.all(
@@ -12,6 +11,36 @@ const getAllProducts = async (req, res) => {
                         !req.inaccessibleProductIds ||
                         !req.inaccessibleProductIds.includes(product.id)
                 )
+                .map(async (product) => {
+                    product.modules = await moduleModel.getModulesByProductId(
+                        product.id
+                    );
+                    return product;
+                })
+        );
+
+        const freeProducts = productsWithModules.filter((obj) => {
+            return obj.subscription_required === 0;
+        });
+        const subscriptionProducts = productsWithModules.filter((obj) => {
+            return obj.subscription_required === 1;
+        });
+
+        res.json({
+            free_products: freeProducts,
+            subscription_products: subscriptionProducts,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const getAllProducts = async (req, res) => {
+    try {
+        const products = await productModel.getAllProducts(false);
+        const productsWithModules = await Promise.all(
+            products
                 .map(async (product) => {
                     product.modules = await moduleModel.getModulesByProductId(
                         product.id
@@ -92,6 +121,7 @@ const updateProduct = async (req, res) => {
 };
 
 module.exports = {
+    getAllActiveProducts,
     getAllProducts,
     getProductById,
     createProduct,

@@ -71,6 +71,7 @@ router.post("/register", userController.registerUser);
  */
 router.post("/login", userController.loginUser);
 
+router.use(authenticateUser);
 /**
  * @swagger
  * /user:
@@ -87,7 +88,60 @@ router.post("/login", userController.loginUser);
  *       500:
  *         description: Internal Server Error
  */
-router.use(authenticateUser);
 router.get("/", isAdmin, userController.getAllUsers);
+
+/**
+ * @swagger
+ * /user/edit-profile:
+ *   put:
+ *     summary: Edit user's first and last name
+ *     tags: [Users]
+ *     description: Allow the authenticated user to edit their own first and last name.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *               last_name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful update
+ *       500:
+ *         description: Internal Server Error
+ */
+router.put("/edit-profile", userController.editUserProfile);
+
+/**
+ * @swagger
+ * /user/change-password:
+ *   put:
+ *     summary: Change user's password
+ *     tags: [Users]
+ *     description: Allow the authenticated user to change their own password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               current_password:
+ *                 type: string
+ *               new_password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       401:
+ *         description: Invalid current password
+ *       500:
+ *         description: Internal Server Error
+ */
+router.put("/change-password", userController.changeUserPassword);
 
 module.exports = router;

@@ -1,6 +1,5 @@
 // middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
-const db = require("../db");
 const config = require("../config");
 const subscriptionModel = require("../models/subscriptionModel");
 const moduleModel = require("../models/moduleModel");
@@ -103,7 +102,8 @@ const checkResourcePreviewAccess = async (req, res, next) => {
             req.inaccessibleProductIds &&
             resourceProductIds.filter(
                 (pid) => !req.inaccessibleProductIds.includes(pid)
-            ) <= 0 && req.user.user_type !== "ADMIN"
+            ) <= 0 &&
+            req.user.user_type !== "ADMIN"
         ) {
             return res
                 .status(403)

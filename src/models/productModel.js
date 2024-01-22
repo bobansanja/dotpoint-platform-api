@@ -1,7 +1,9 @@
 const db = require("../db");
 
-const getAllProducts = async () => {
-    const products = await db("products").select("*");
+const getAllProducts = async (onlyActive = true) => {
+    const products = onlyActive
+        ? await db("products").where({ active: 1 })
+        : await db("products").select("*");
     return products;
 };
 

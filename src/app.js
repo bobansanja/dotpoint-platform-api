@@ -35,6 +35,7 @@ const moduleRoutes = require("./routes/moduleRoutes");
 const resourceRoutes = require("./routes/resourceRoutes");
 const moduleResourceRoutes = require("./routes/moduleResourceRoutes");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
+const configRoutes = require("./routes/configRoutes");
 
 app.use("/user", userRoutes);
 app.use("/products", productRoutes);
@@ -42,6 +43,7 @@ app.use("/modules", moduleRoutes);
 app.use("/resources", resourceRoutes);
 app.use("/module-resources", moduleResourceRoutes);
 app.use("/subscriptions", subscriptionRoutes);
+app.use("/config", configRoutes)
 
 // Swagger setup
 const options = {
@@ -83,9 +85,11 @@ app.get("/api-docs.json", (req, res) => {
     res.send(specs);
 });
 
-const { authenticateUser, checkResourcePreviewAccess } = require("./middleware/authMiddleware");
-app.use(authenticateUser);
-app.use("/static", checkResourcePreviewAccess, express.static("upload"));
+//const { authenticateUser, checkResourcePreviewAccess } = require("./middleware/authMiddleware");
+//app.use(authenticateUser);
+//app.use("/static", checkResourcePreviewAccess, express.static("upload"));
+app.use("/static", express.static("upload"));
+
 
 // Start the server
 const PORT = process.env.PORT || config.PORT;

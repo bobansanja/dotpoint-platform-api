@@ -73,8 +73,45 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const editUserProfile = async (req, res) => {
+    try {
+        const { first_name, last_name } = req.body;
+        const userId = req.user.user_id;
+
+        await userModel.editUserProfile(userId, { first_name, last_name });
+
+        res.status(200).json();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const changeUserPassword = async (req, res) => {
+    try {
+        const { current_password, new_password } = req.body;
+        const userId = req.user.user_id;
+
+        const user = await userModel.getUserById(userId);
+
+        if (!(await bcrypt.compare(current_password, user.password))) {
+            return res.status(401).json({ error: "Invalid current password" });
+        }
+
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        await userModel.changeUserPassword(userId, hashedPassword);
+
+        res.status(200).json();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     getAllUsers,
+    editUserProfile,
+    changeUserPassword,
 };
